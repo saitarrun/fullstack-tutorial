@@ -1,7 +1,7 @@
 const { paginateResults } = require('./utils');
 const { PubSub } = require('graphql-subscriptions');
 const { GraphQLUpload } = require('graphql-upload');
-import { GraphQLError } from 'graphql';
+const { GraphQLError } = require('graphql');
 
 const TRIPS_BOOKED = 'TRIPS_BOOKED';
 const pubsub = new PubSub();
