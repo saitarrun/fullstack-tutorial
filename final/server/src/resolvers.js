@@ -1,6 +1,7 @@
 const { paginateResults } = require('./utils');
 const { PubSub } = require('graphql-subscriptions');
 const { GraphQLUpload } = require('graphql-upload');
+const { GraphQLError } = require('graphql');
 
 const TRIPS_BOOKED = 'TRIPS_BOOKED';
 const pubsub = new PubSub();
@@ -35,8 +36,17 @@ module.exports = {
           : false,
       };
     },
-    launch: (_, { id }, { dataSources }) =>
-      dataSources.launchAPI.getLaunchById({ launchId: id }),
+    launch: async (_, { id }, { dataSources }) => {
+      const launchResult = await dataSources.launchAPI.getLaunchById({ launchId: id });
+      if (!launchResult) {
+        throw new GraphQLError('Launch not found', {
+          extensions: {
+            code: 'NOT_FOUND',
+          },
+        });
+      }
+      return launchResult;
+    },
     me: async (_, __, { dataSources }) =>
       dataSources.userAPI.findOrCreateUser(),
     totalTripsBooked: (_, __, { dataSources }) => dataSources.userAPI.countTrips()
