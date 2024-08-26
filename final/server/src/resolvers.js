@@ -58,7 +58,7 @@ module.exports = {
         launchIds,
       });
       
-      pubsub.publish(TRIPS_BOOKED, { tripsBooked: launches.length });
+      await pubsub.publish(TRIPS_BOOKED, { tripsBooked: launches.length });
 
       return {
         success: results && results.length === launchIds.length,
